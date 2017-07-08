@@ -3,21 +3,9 @@ package com.example.kaila.input;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
-import android.app.DatePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.IdRes;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.os.Environment;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import java.util.Calendar;
 import android.content.Intent;
 import java.io.*;
 
@@ -56,18 +44,17 @@ public class get_data extends AppCompatActivity {
                     {
                         FileWriter f;
                         try{
-
-                            f = new FileWriter(  getFilesDir()+"/data.txt",append);
+                            f = new FileWriter(getFilesDir().getAbsolutePath()+"/data.txt",append);
                             f.write(in.getText().toString()+Integer.toString(o)+"\n");
                             f.flush();
                             f.close();
                             i++;
-                            msg.setText("Succes"+Integer.toString(i));
-
-
+                            msg.setText("Succes");
+                            if(i==n)
+                                finish();
                         }
                         catch(Exception e){
-                            msg.setText(e.getMessage()+"\n"+Environment.getDataDirectory().getAbsolutePath()+"/data.txt");
+                            msg.setText(e.getMessage()+"\n"+getFilesDir().getAbsolutePath()+"/data.txt");
                         }
                     }
                     else
@@ -76,7 +63,7 @@ public class get_data extends AppCompatActivity {
                     }
                 }
                 else
-                    msg.setText("need to exit");
+                    finish();
             }
         });
     }
