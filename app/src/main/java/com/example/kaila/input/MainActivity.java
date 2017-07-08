@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import java.util.Calendar;
+import android.content.Intent;
 import java.io.*;
 
 
@@ -22,6 +23,7 @@ import java.io.*;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private EditText income;
     private TextView start_date;
     private TextView end_date;
@@ -30,15 +32,65 @@ public class MainActivity extends AppCompatActivity {
     private TextView result;
     private DatePickerDialog.OnDateSetListener s_d;
     private DatePickerDialog.OnDateSetListener e_d;
+    static String P1;
+    static String P2;
     private String sd;
     private String ed;
-    private String in;
     private String er;
     private String option;
     private String s_r;
     private RadioGroup rGroup;
     private Button reset;
     private Button submit;
+
+
+    //protected int countLeapYears(int d);
+
+    public void sendMessage(View view)
+    {
+        Intent intent = new Intent(this, get_data.class);
+        disp =(TextView) findViewById(R.id.textView6);
+        set_p1_p2();
+        disp.setText("switching...");
+        intent.putExtra(EXTRA_MESSAGE,P1+P2);
+        startActivity(intent);
+        disp.setText("Done");
+    }
+
+    protected void set_p1_p2()
+    {
+        int ans;
+        int d1,d2,m1,m2,y1,y2;
+        int monthDays[] ={31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        m1=(int)(Integer.parseInt(sd.substring(0,2)));
+        m2=(int)(Integer.parseInt(ed.substring(0,2)));
+        d1=(int)(Integer.parseInt(sd.substring(3,5)));
+        d2=(int)(Integer.parseInt(ed.substring(3,5)));
+        y1=(int)(Integer.parseInt(sd.substring(6)));
+        y2=(int)(Integer.parseInt(ed.substring(6)));
+        int n1=y1*365+d1;
+        for(int i=0;i<m2-1;i++)
+        {
+            n1+=monthDays[i];
+        }
+        int n2=y2*365+d2;
+        for(int i=0;i<m2-1;i++)
+        {
+            n2+=monthDays[i];
+        }
+        ans=n2-n1;
+        if(option.equals("weekly"))
+        {
+            P2="1";
+            ans/=7;
+        }
+        else
+        {
+            P2="2";
+            ans/=30;
+        }
+        P1=Integer.toString(ans);
+    }
 
     protected void reset(){
         end_date=(TextView) findViewById(R.id.textView4);
@@ -47,16 +99,13 @@ public class MainActivity extends AppCompatActivity {
         start_date.setText(null);
         rGroup = (RadioGroup) findViewById(R.id.rGroup);
         rGroup.clearCheck();
-        income=(EditText) findViewById(R.id.editText3);
-        income.setText(null);
         disp =(TextView) findViewById(R.id.textView6);
         disp.setText("msg:");
-        in="";
         sd="";
         ed="";
     }
 
-    boolean validate(String start,String end,String income,String option)
+    boolean validate(String start,String end,String option)
     {
         er="";
         int d1,d2,m1,m2,y1,y2;
@@ -67,12 +116,12 @@ public class MainActivity extends AppCompatActivity {
             er+="invalid start date;";
         if(end.length()<1)
             er+="invalid end date;";
-        try{
+        /*try{
             in=(float)(Float.parseFloat(income));
         }
         catch(Exception e){
             er+="invalid income;";
-        }
+        }*/
         if(er.length()<1)
         {
             boolean flag=false;
@@ -117,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
 
         sd="";
         ed="";
-        in="";
         option="";
         //start of start date input and display
 
@@ -218,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         //end of Radio selection settings
         //start of income textbox
 
-        income=(EditText) findViewById(R.id.editText3);
+        /*income=(EditText) findViewById(R.id.editText3);
         income.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -235,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 in=income.getText().toString();
             }
         });
-
+        */
 
         //end of income textbox
         //start of reset button
@@ -250,18 +298,16 @@ public class MainActivity extends AppCompatActivity {
 
         //end of reset button
         //start of submit button
-
+/*
         submit=(Button) findViewById(R.id.button3);
         submit.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                income=(EditText) findViewById(R.id.editText3);
-                in=income.getText().toString();
-                boolean result = validate(sd,ed,in,option);
+                boolean result = validate(sd,ed,option);
                 if(result)
                 {
-                    disp =(TextView) findViewById(R.id.textView6);
-                    disp.setText("frequency: "+option+";start date: "+sd+";\nend date: "+ed+";income: "+in);
+                    call_get_data(view);
+
                 }
                 else
                 {
@@ -270,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
+*/
         //end of submit button
     }
 
